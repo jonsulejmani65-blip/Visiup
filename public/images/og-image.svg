@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VISIUP">
+  <defs>
+    <linearGradient id="grad-og-image" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F766E" />
+      <stop offset="100%" stop-color="#16242a" />
+    </linearGradient>
+    <pattern id="grid-og-image" width="48" height="48" patternUnits="userSpaceOnUse">
+           <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+         </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grad-og-image)" />
+  <rect width="1200" height="630" fill="url(#grid-og-image)" />
+  <text x="40" y="574" font-family="Arial, Helvetica, sans-serif" font-size="34.65" font-weight="700" fill="#ffffff">VISIUP</text>
+  <text x="40" y="602" font-family="Arial, Helvetica, sans-serif" font-size="17.64" fill="rgba(255,255,255,0.72)">Digitalmarketing für KMUs in Basel</text>
+</svg>
