@@ -1,7 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import Hero from "@/components/sections/Hero";
-import Services from "@/components/sections/Services";
+import GrowthScene from "@/components/three/GrowthScene";
 import About from "@/components/sections/About";
 import CaseStudies from "@/components/sections/CaseStudies";
 import BlogCarousel from "@/components/sections/BlogCarousel";
@@ -12,8 +11,7 @@ export default function Home() {
     <>
       <Navbar />
       <main>
-        <Hero />
-        <Services />
+        <GrowthScene />
         <About />
         <CaseStudies />
         <BlogCarousel />

@@ -13,7 +13,14 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      const sentinel = document.getElementById("hero-sentinel");
+      if (sentinel) {
+        setIsScrolled(sentinel.getBoundingClientRect().top <= 80);
+      } else {
+        setIsScrolled(window.scrollY > 24);
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
