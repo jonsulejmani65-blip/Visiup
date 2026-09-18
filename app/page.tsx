@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import GrowthScene from "@/components/three/GrowthScene";
+import HeroNetworkScene from "@/components/three/HeroNetworkScene";
 import About from "@/components/sections/About";
 import CaseStudies from "@/components/sections/CaseStudies";
 import BlogCarousel from "@/components/sections/BlogCarousel";
@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Navbar />
       <main>
-        <GrowthScene />
+        <HeroNetworkScene />
         <About />
         <CaseStudies />
         <BlogCarousel />
