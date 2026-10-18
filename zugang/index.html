@@ -163,6 +163,8 @@
 </div>
 
 <script>
+// Als Datei geöffnet? -> automatisch zur Online-Version (nur dort funktioniert der Versand)
+if(location.protocol==="file:"){ location.replace("https://jonsulejmani65-blip.github.io/Visiup/zugang/"); }
 // ===== ANPASSEN =====
 const AGENTUR_EMAIL = "info@visiup.ch";
 // ====================
@@ -403,8 +405,8 @@ async function submitForm(){
     try{localStorage.removeItem(STORE);}catch(e){}
     document.getElementById("doneModal").classList.add("show");
   }catch(e){
-    if(/activ/i.test(e.message)){ toast("Einmalig: Bitte Aktivierungs-Mail in info@visiup.ch bestätigen."); }
-    else { toast("Direktversand nicht möglich – bitte per Mail senden."); sendMail(); }
+    if(/activ/i.test(e.message)){ alert("Einmalige Aktivierung nötig:\nBitte in info@visiup.ch das Mail von FormSubmit öffnen und auf «Activate Form» klicken. Danach nochmals senden."); }
+    else { alert("Senden hat nicht geklappt.\nFehler: "+e.message+"\n\nBitte versuchen Sie es nochmals oder kontaktieren Sie info@visiup.ch."); }
   }finally{ btn.disabled=false; btn.textContent=old; }
 }
 
