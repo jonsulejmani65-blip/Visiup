@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zugangsdaten – Visiup</title>
+<style>
+  /* === ANPASSEN: deine E-Mail-Adresse steht unten im Script (AGENTUR_EMAIL) === */
+  :root{
+    --teal:#0F766E; --teal-light:#7fd6cd; --teal-bg:#e9f6f4;
+    --navy:#0D1B3D; --text:#1d2433; --muted:#64708a; --line:#e3e7ee;
+    --bg:#f5f7fa; --card:#fff; --warn:#b45309; --warn-bg:#fff7ed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:36px 16px 70px}
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px}
+  .logo{font-size:28px;font-weight:800;letter-spacing:-.5px}
+  .logo span{color:var(--teal-light)}
+  .slogan{opacity:.75;font-size:14px;margin-top:2px}
+  header h1{font-size:26px;margin:26px 0 8px}
+  header p{margin:0;opacity:.85;max-width:620px}
+  main{margin-top:-44px;padding-bottom:120px}
+  .card{background:var(--card);border-radius:14px;box-shadow:0 2px 10px rgba(13,27,61,.06);padding:22px;margin-bottom:16px;border:1px solid var(--line)}
+  .card h2{font-size:18px;margin:0 0 4px;color:var(--navy);display:flex;align-items:center;gap:10px}
+  .card .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .icon{width:34px;height:34px;border-radius:9px;background:var(--teal-bg);color:var(--teal);display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .full{grid-column:1/-1}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px}
+  input[type=text],input[type=email],input[type=tel],input[type=url],input[type=password],textarea,select{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:15px;font-family:inherit;background:#fbfcfd;color:var(--text)}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.12);background:#fff}
+  textarea{min-height:64px;resize:vertical}
+  .pw{position:relative}
+  .pw input{padding-right:64px}
+  .pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--teal);font-weight:600;font-size:13px;cursor:pointer;padding:6px}
+  .status{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .status label{margin:0;font-weight:500;font-size:13px;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:#fbfcfd;user-select:none}
+  .status input{display:none}
+  .status input:checked+span{color:#fff}
+  .status label:has(input:checked){background:var(--teal);border-color:var(--teal);color:#fff}
+  .fields{display:none}
+  .fields.show{display:block}
+  .hint{background:var(--teal-bg);color:#0b4f4a;font-size:13px;border-radius:9px;padding:10px 12px;margin-bottom:12px}
+  .done-badge{margin-left:auto;font-size:12px;font-weight:600;color:var(--teal);display:none}
+  .card.done .done-badge{display:inline}
+  .remove{margin-left:auto;border:0;background:none;color:#b91c1c;font-size:13px;cursor:pointer;font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .chip{border:1px dashed var(--teal);color:var(--teal);background:#fff;border-radius:999px;padding:7px 13px;font-size:14px;cursor:pointer;font-family:inherit}
+  .chip:hover{background:var(--teal-bg)}
+  .chip[disabled]{opacity:.35;cursor:default}
+  .btn{border:0;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{background:#0c5f58}
+  .btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .security{background:var(--warn-bg);border:1px solid #fed7aa;color:#7c2d12;border-radius:12px;padding:14px 16px;font-size:14px}
+  .security b{color:var(--warn)}
+  .check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--text)}
+  .check input{margin-top:3px;accent-color:var(--teal);width:18px;height:18px;flex-shrink:0}
+  .progress{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px;z-index:10;box-shadow:0 -4px 14px rgba(13,27,61,.06)}
+  .progress .wrap{display:flex;align-items:center;gap:14px}
+  .bar{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar div{height:100%;background:var(--teal);width:0;transition:width .3s}
+  .ptext{font-size:13px;color:var(--muted);white-space:nowrap}
+  .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:20}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:24px}
+  .modal-bg{position:fixed;inset:0;background:rgba(13,27,61,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:22px}
+  .modal h3{margin:0 0 6px;color:var(--navy);font-size:19px}
+  .modal ol{padding-left:20px;margin:10px 0 14px;font-size:14px}
+  .modal ol li{margin-bottom:6px}
+  .modal textarea{min-height:170px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+  .modal .addr{background:var(--teal-bg);border-radius:9px;padding:8px 12px;font-size:14px;margin-bottom:12px}
+  .modal a.btn{text-decoration:none;display:inline-block}
+  .ok{color:var(--teal);font-weight:600}
+  @media (max-width:600px){.grid{grid-template-columns:1fr}header h1{font-size:22px}.card{padding:18px}}
+  @media print{.progress,.btn-row,.chips,.toast,.pw button,.remove{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">Visi<span>up</span></div>
+    <div class="slogan">Wo Sichtbarkeit zu Wachstum wird.</div>
+    <h1>Zugangsdaten für Ihre Online-Präsenz</h1>
+    <p>Damit wir Ihre Website, Ihr Google-Profil und Ihre Social-Media-Kanäle optimal betreuen können, brauchen wir Zugriff. Füllen Sie einfach aus, was Sie haben – bei allem anderen wählen Sie «Nicht vorhanden» oder «Weiss ich nicht».</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="card">
+    <h2><span class="icon">🏢</span>Ihre Angaben</h2>
+    <p class="sub">Damit wir die Daten richtig zuordnen können.</p>
+    <div class="grid">
+      <div><label>Firma *</label><input type="text" id="firma" data-key="firma"></div>
+      <div><label>Ansprechperson *</label><input type="text" id="person" data-key="person"></div>
+      <div><label>E-Mail</label><input type="email" data-key="email"></div>
+      <div><label>Telefon / Mobile</label><input type="tel" data-key="telefon"></div>
+      <div class="full"><label>Website-Adresse</label><input type="url" placeholder="https://www.ihre-firma.ch" data-key="website"></div>
+    </div>
+  </div>
+
+  <div class="security">
+    <b>🔒 Tipp für mehr Sicherheit:</b> Bei Facebook/Instagram, Google und LinkedIn können Sie uns auch einfach als Administrator <b>einladen</b> statt das Passwort zu teilen. Wählen Sie dann «Einladung erteilt» – so bleibt Ihr Passwort bei Ihnen.
+  </div>
+  <br>
+
+  <div id="platforms"></div>
+
+  <div class="card">
+    <h2><span class="icon">➕</span>Weitere Zugänge</h2>
+    <p class="sub">Haben Sie noch andere Konten? Einfach antippen oder einen eigenen Zugang hinzufügen.</p>
+    <div class="chips" id="chips"></div>
+    <button class="btn btn-ghost" type="button" onclick="addCustom()">+ Eigenen Zugang hinzufügen</button>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">✅</span>Abschluss</h2>
+    <div style="margin-bottom:14px"><label>Bemerkungen an Visiup</label><textarea data-key="bemerkungen" placeholder="z.B. Wer bei Ihnen die 2-Faktor-Codes erhält, beste Erreichbarkeit …"></textarea></div>
+    <label class="check"><input type="checkbox" id="consent" data-key="consent"> Ich bestätige, dass ich berechtigt bin, diese Zugänge weiterzugeben, und Visiup diese ausschliesslich zur Betreuung unserer Online-Präsenz verwenden darf.</label>
+    <div class="btn-row">
+      <button class="btn btn-primary" type="button" id="sendBtn" onclick="submitForm()">📨 Jetzt sicher an Visiup senden</button>
+      <input type="text" id="website_hp" name="website_hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+    </div>
+    <p class="sub" style="margin-top:12px">🔒 Ihre Angaben werden verschlüsselt (HTTPS) direkt an Visiup übermittelt und nicht auf dieser Seite gespeichert.</p>
+  </div>
+
+  <footer>Visiup · Digitalmarketing für Schweizer KMU</footer>
+</main>
+
+<div class="progress"><div class="wrap"><div class="bar"><div id="barFill"></div></div><div class="ptext" id="ptext">0 von 0 erledigt</div></div></div>
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="doneModal">
+  <div class="modal" style="text-align:center;padding:34px 24px">
+    <div style="font-size:46px">✅</div>
+    <h3 style="font-size:22px;margin:8px 0">Vielen Dank!</h3>
+    <p class="sub" style="font-size:15px">Ihre Zugangsdaten sind bei uns angekommen. Wir melden uns, sobald alles eingerichtet ist.</p>
+    <p style="color:var(--teal);font-weight:600;margin:0">Ihr Visiup-Team</p>
+  </div>
+</div>
+
+<div class="modal-bg" id="mailModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>📧 Fast geschafft!</h3>
+    <p id="mailStatus" class="sub" style="margin:0"></p>
+    <ol id="mailSteps"></ol>
+    <div class="addr">Empfänger: <b id="mailAddr"></b></div>
+    <div class="btn-row" style="margin:0 0 14px">
+      <a class="btn btn-primary" id="mailLink" href="#" target="_blank" rel="noopener">📧 Mail-Programm öffnen</a>
+      <button class="btn btn-ghost" type="button" onclick="copyModal()">📋 Text kopieren</button>
+    </div>
+    <label>Ihre Angaben (vollständig)</label>
+    <textarea id="mailText" readonly onclick="this.select()"></textarea>
+    <div class="btn-row"><button class="btn btn-ghost" type="button" onclick="closeModal()">Schliessen</button></div>
+  </div>
+</div>
+
+<script>
+// ===== ANPASSEN =====
+const AGENTUR_EMAIL = "info@visiup.ch";
+// ====================
+
+const CORE = [
+  {id:"website", name:"Website / CMS", icon:"🌐", sub:"Login ins Backend Ihrer Website (z.B. WordPress, Wix, Jimdo, Webflow).",
+   extra:[{k:"system",l:"System (falls bekannt)",ph:"z.B. WordPress"}], invite:false},
+  {id:"hosting", name:"Hosting", icon:"🖥️", sub:"Wo Ihre Website liegt (z.B. Hostpoint, Infomaniak, Cyon, Metanet).",
+   extra:[{k:"anbieter",l:"Anbieter",ph:"z.B. Hostpoint"}], invite:false},
+  {id:"domain", name:"Domain-Verwaltung", icon:"🔗", sub:"Wo Ihre Domain (.ch) registriert ist – oft gleich wie das Hosting.",
+   extra:[{k:"anbieter",l:"Anbieter",ph:"z.B. Hostpoint, Switch, GoDaddy"}], invite:false},
+  {id:"google", name:"Google Unternehmensprofil", icon:"📍", sub:"Ihr Eintrag auf Google Maps / Google Suche.",
+   invite:"In Google Unternehmensprofil → Menü «Unternehmensprofil-Einstellungen» → «Personen und Zugriff» → «Hinzufügen» → unsere E-Mail als Inhaber/Verwalter eintragen."},
+  {id:"facebook", name:"Facebook", icon:"📘", sub:"Facebook-Seite und/oder Meta Business Suite.",
+   extra:[{k:"seite",l:"Link zur Facebook-Seite",ph:"https://facebook.com/…"}],
+   invite:"In der Meta Business Suite → Einstellungen → «Partner» → Partner hinzufügen. Oder auf der Seite → Einstellungen → Seitenzugriff → Person hinzufügen."},
+  {id:"instagram", name:"Instagram", icon:"📸", sub:"Ihr Instagram-Firmenkonto.",
+   extra:[{k:"handle",l:"Benutzername",ph:"@ihrefirma"}],
+   invite:"Ist Instagram mit Facebook verbunden, reicht der Zugriff über die Meta Business Suite."},
+  {id:"tiktok", name:"TikTok", icon:"🎵", sub:"Ihr TikTok-Konto.",
+   extra:[{k:"handle",l:"Benutzername",ph:"@ihrefirma"}], invite:false},
+  {id:"linkedin", name:"LinkedIn", icon:"💼", sub:"Ihre LinkedIn-Unternehmensseite.",
+   extra:[{k:"seite",l:"Link zur Unternehmensseite",ph:"https://linkedin.com/company/…"}],
+   invite:"Auf der Unternehmensseite → «Seite verwalten» → Einstellungen → «Seitenadministratoren verwalten» → unsere Person als Administrator hinzufügen."}
+];
+
+const OPTIONAL = [
+  {id:"analytics", name:"Google Analytics", icon:"📊", invite:"Verwaltung → Kontozugriff → «+» → unsere E-Mail als Administrator hinzufügen."},
+  {id:"searchconsole", name:"Google Search Console", icon:"🔎", invite:"Einstellungen → Nutzer und Berechtigungen → Nutzer hinzufügen (Inhaber)."},
+  {id:"googleads", name:"Google Ads", icon:"📢", invite:"Verwaltung → Zugriff und Sicherheit → «+» → unsere E-Mail hinzufügen."},
+  {id:"tagmanager", name:"Google Tag Manager", icon:"🏷️", invite:"Verwaltung → Nutzerverwaltung → «+» → Nutzer hinzufügen."},
+  {id:"youtube", name:"YouTube", icon:"▶️"},
+  {id:"x", name:"X (Twitter)", icon:"✖️"},
+  {id:"pinterest", name:"Pinterest", icon:"📌"},
+  {id:"newsletter", name:"Newsletter-Tool", icon:"✉️", extra:[{k:"tool",l:"Tool",ph:"z.B. Mailchimp, Brevo"}]},
+  {id:"shop", name:"Online-Shop", icon:"🛒", extra:[{k:"system",l:"System",ph:"z.B. Shopify, WooCommerce"}]},
+  {id:"localsearch", name:"local.ch / search.ch", icon:"📒"},
+  {id:"bewertungen", name:"Bewertungsportale", icon:"⭐", extra:[{k:"portal",l:"Portal",ph:"z.B. Trustpilot, Tripadvisor"}]},
+  {id:"mail", name:"E-Mail-Postfach", icon:"📨", extra:[{k:"anbieter",l:"Anbieter",ph:"z.B. Microsoft 365, Gmail"}]}
+];
+
+let customCount = 0;
+const added = new Set();
+const container = document.getElementById("platforms");
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function cardHTML(p, removable){
+  const extra = (p.extra||[]).map(e=>`<div><label>${esc(e.l)}</label><input type="text" data-key="${p.id}.${e.k}" placeholder="${esc(e.ph||"")}"></div>`).join("");
+  const nameField = p.custom ? `<div class="full"><label>Name der Plattform / des Tools *</label><input type="text" data-key="${p.id}.plattform" placeholder="z.B. Canva, Booking-Tool …"></div>` : "";
+  return `
+  <div class="card" data-platform="${p.id}" data-name="${esc(p.name)}">
+    <h2><span class="icon">${p.icon}</span><span class="pname">${esc(p.name)}</span><span class="done-badge">✓ erledigt</span>${removable?`<button class="remove" type="button" onclick="removeCard('${p.id}')">Entfernen</button>`:""}</h2>
+    ${p.sub?`<p class="sub">${esc(p.sub)}</p>`:""}
+    <div class="status">
+      <label><input type="radio" name="${p.id}.status" value="login" data-key="${p.id}.status"><span>Login-Daten angeben</span></label>
+      ${p.invite?`<label><input type="radio" name="${p.id}.status" value="einladung" data-key="${p.id}.status"><span>Einladung erteilt</span></label>`:""}
+      <label><input type="radio" name="${p.id}.status" value="unbekannt" data-key="${p.id}.status"><span>Weiss ich nicht</span></label>
+      <label><input type="radio" name="${p.id}.status" value="keins" data-key="${p.id}.status"><span>Nicht vorhanden</span></label>
+    </div>
+    <div class="fields" data-for="login">
+      <div class="grid">
+        ${nameField}
+        <div class="full"><label>Login-Adresse (URL)</label><input type="text" data-key="${p.id}.url" placeholder="Wo loggen Sie sich ein?"></div>
+        <div><label>Benutzername / E-Mail</label><input type="text" data-key="${p.id}.user" autocomplete="off"></div>
+        <div><label>Passwort</label><div class="pw"><input type="password" data-key="${p.id}.pass" autocomplete="new-password"><button type="button" onclick="togglePw(this)">Zeigen</button></div></div>
+        ${extra}
+        <div class="full"><label>2-Faktor-Code geht an</label><input type="text" data-key="${p.id}.twofa" placeholder="z.B. Handy 079 … / E-Mail / keine 2FA"></div>
+        <div class="full"><label>Notizen</label><textarea data-key="${p.id}.notiz"></textarea></div>
+      </div>
+    </div>
+    <div class="fields" data-for="einladung">
+      ${p.invite?`<div class="hint"><b>So geht's:</b> ${esc(p.invite)}<br>Unsere E-Mail: <b>${esc(AGENTUR_EMAIL)}</b></div>`:""}
+      <label>Notizen</label><textarea data-key="${p.id}.notiz_einl" placeholder="z.B. Einladung am … versendet"></textarea>
+    </div>
+    <div class="fields" data-for="unbekannt">
+      <label>Was wissen Sie dazu? (z.B. wer es eingerichtet hat)</label><textarea data-key="${p.id}.notiz_unb"></textarea>
+    </div>
+  </div>`;
+}
+
+function addCard(p, removable, data){
+  container.insertAdjacentHTML("beforeend", cardHTML(p, removable));
+  const card = container.lastElementChild;
+  bindCard(card);
+  if(data) restoreInto(card, data);
+  updateCard(card);
+  update();
+  return card;
+}
+
+function bindCard(card){
+  card.querySelectorAll("input,textarea").forEach(el=>{
+    el.addEventListener("input",()=>{updateCard(card);update();save();});
+    el.addEventListener("change",()=>{updateCard(card);update();save();});
+  });
+}
+
+function updateCard(card){
+  const st = card.querySelector('input[type=radio]:checked');
+  const val = st?st.value:null;
+  card.querySelectorAll(".fields").forEach(f=>f.classList.toggle("show", f.dataset.for===val));
+  let done=false;
+  if(val==="keins"||val==="einladung"||val==="unbekannt") done=true;
+  if(val==="login"){
+    const u=card.querySelector('[data-key$=".user"]').value.trim();
+    const p=card.querySelector('[data-key$=".pass"]').value.trim();
+    done = !!(u&&p);
+  }
+  card.classList.toggle("done", done);
+  // live name for custom cards
+  const pf = card.querySelector('[data-key$=".plattform"]');
+  if(pf){ const n=pf.value.trim()||"Eigener Zugang"; card.querySelector(".pname").textContent=n; card.dataset.name=n; }
+}
+
+function update(){
+  const cards=[...container.querySelectorAll(".card")];
+  const done=cards.filter(c=>c.classList.contains("done")).length;
+  document.getElementById("barFill").style.width=(cards.length?done/cards.length*100:0)+"%";
+  document.getElementById("ptext").textContent=`${done} von ${cards.length} erledigt`;
+}
+
+function renderChips(){
+  document.getElementById("chips").innerHTML = OPTIONAL.map(o=>
+    `<button class="chip" type="button" ${added.has(o.id)?"disabled":""} onclick="addOptional('${o.id}')">${o.icon} ${esc(o.name)}</button>`).join("");
+}
+function addOptional(id, data){
+  const o=OPTIONAL.find(x=>x.id===id); if(!o||added.has(id)) return;
+  added.add(id); renderChips();
+  const card=addCard(o,true,data);
+  if(!data){card.scrollIntoView({behavior:"smooth",block:"center"}); save();}
+}
+function addCustom(data, id){
+  customCount++;
+  const cid = id || "custom"+Date.now()+customCount;
+  const card=addCard({id:cid,name:"Eigener Zugang",icon:"🔑",custom:true,invite:false},true,data);
+  if(!data){card.querySelector('input[value=login]').click(); card.scrollIntoView({behavior:"smooth",block:"center"}); save();}
+}
+function removeCard(id){
+  const card=container.querySelector(`[data-platform="${id}"]`);
+  if(!card||!confirm("Diesen Zugang entfernen?")) return;
+  card.remove(); added.delete(id); renderChips(); update(); save();
+}
+function togglePw(btn){
+  const i=btn.previousElementSibling; const show=i.type==="password";
+  i.type=show?"text":"password"; btn.textContent=show?"Verbergen":"Zeigen";
+}
+
+// ---------- Speichern (nur lokal im Browser) ----------
+const STORE="visiup_zugangsdaten_v1";
+function collect(){
+  const data={}; document.querySelectorAll("[data-key]").forEach(el=>{
+    if(el.type==="radio"){ if(el.checked) data[el.dataset.key]=el.value; }
+    else if(el.type==="checkbox"){ data[el.dataset.key]=el.checked; }
+    else if(el.value) data[el.dataset.key]=el.value;
+  });
+  return data;
+}
+function save(){
+  try{
+    const extras=[...container.querySelectorAll(".card")].map(c=>c.dataset.platform).filter(id=>!CORE.find(p=>p.id===id));
+    localStorage.setItem(STORE, JSON.stringify({data:collect(),extras}));
+  }catch(e){}
+}
+function restoreInto(root, data){
+  root.querySelectorAll("[data-key]").forEach(el=>{
+    const v=data[el.dataset.key]; if(v===undefined) return;
+    if(el.type==="radio") el.checked=(el.value===v);
+    else if(el.type==="checkbox") el.checked=!!v;
+    else el.value=v;
+  });
+}
+function load(){
+  let saved=null; try{saved=JSON.parse(localStorage.getItem(STORE));}catch(e){}
+  const data=saved?saved.data:{};
+  CORE.forEach(p=>addCard(p,false,data));
+  if(saved&&saved.extras) saved.extras.forEach(id=>{
+    if(OPTIONAL.find(o=>o.id===id)) addOptional(id,data); else addCustom(data,id);
+  });
+  restoreInto(document.querySelector("main > .card"), data);
+  restoreInto(document.querySelector("main > .card:last-of-type"), data);
+  document.querySelectorAll("main > .card:not(#platforms .card) [data-key]").forEach(el=>el.addEventListener("input",save));
+  document.getElementById("consent").addEventListener("change",save);
+  renderChips(); update();
+}
+
+// ---------- Export ----------
+function buildText(){
+  const d=collect(); const L=[];
+  const STAT={login:"Login-Daten",einladung:"Einladung erteilt",unbekannt:"Weiss ich nicht",keins:"Nicht vorhanden"};
+  L.push("ZUGANGSDATEN FÜR VISIUP","=======================");
+  L.push("Firma: "+(d.firma||"-"),"Ansprechperson: "+(d.person||"-"),"E-Mail: "+(d.email||"-"),"Telefon: "+(d.telefon||"-"),"Website: "+(d.website||"-"),"Datum: "+new Date().toLocaleDateString("de-CH"),"");
+  container.querySelectorAll(".card").forEach(c=>{
+    const id=c.dataset.platform; const st=d[id+".status"];
+    L.push("--- "+c.dataset.name.toUpperCase()+" ---");
+    L.push("Status: "+(STAT[st]||"nicht ausgefüllt"));
+    c.querySelectorAll(".fields[data-for='"+st+"'] [data-key]").forEach(el=>{
+      const v=d[el.dataset.key]; if(!v) return;
+      const wrap=el.closest(".grid > div")||el.closest(".fields");
+      const lab=wrap.querySelector("label");
+      L.push((lab?lab.textContent.replace(" *",""):el.dataset.key)+": "+v);
+    });
+    L.push("");
+  });
+  if(d.bemerkungen) L.push("BEMERKUNGEN:",d.bemerkungen,"");
+  L.push("Berechtigung bestätigt: "+(d.consent?"Ja":"Nein"));
+  return L.join("\n");
+}
+function check(){
+  const d=collect();
+  if(!d.firma||!d.person){toast("Bitte Firma und Ansprechperson ausfüllen.");document.getElementById("firma").focus();return false;}
+  if(!d.consent){toast("Bitte die Bestätigung am Schluss ankreuzen.");return false;}
+  return true;
+}
+function downloadFile(){
+  if(!check())return;
+  const blob=new Blob([buildText()],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a");
+  const f=(collect().firma||"kunde").replace(/[^a-z0-9äöü]+/gi,"-");
+  a.href=URL.createObjectURL(blob); a.download="Zugangsdaten-"+f+".txt"; a.click();
+  toast("Datei gespeichert ✓");
+}
+// ===== Direkter Versand: kommt automatisch in info@visiup.ch an =====
+const SEND_URL = "https://formsubmit.co/ajax/" + AGENTUR_EMAIL;
+async function submitForm(){
+  if(!check()) return;
+  const btn=document.getElementById("sendBtn");
+  const old=btn.textContent; btn.disabled=true; btn.textContent="⏳ Wird gesendet …";
+  const d=collect();
+  try{
+    const r=await fetch(SEND_URL,{method:"POST",
+      headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify({_subject:"Zugangsdaten – "+(d.firma||""),_template:"box",_captcha:"false",
+        _honey:document.getElementById("website_hp").value,_replyto:d.email||"",
+        Firma:d.firma||"",Ansprechperson:d.person||"",Telefon:d.telefon||"",Zugangsdaten:buildText()})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||String(j.success)!=="true") throw new Error(j.message||("HTTP "+r.status));
+    try{localStorage.removeItem(STORE);}catch(e){}
+    document.getElementById("doneModal").classList.add("show");
+  }catch(e){
+    if(/activ/i.test(e.message)){ toast("Einmalig: Bitte Aktivierungs-Mail in info@visiup.ch bestätigen."); }
+    else { toast("Direktversand nicht möglich – bitte per Mail senden."); sendMail(); }
+  }finally{ btn.disabled=false; btn.textContent=old; }
+}
+
+// Viele Mail-Programme kürzen mailto-Links ab ca. 1800 Zeichen.
+// Lösung: Text immer in die Zwischenablage + vollständig im Fenster anzeigen;
+// passt er in den Link, kommt er direkt ins Mail, sonst fügt der Kunde ihn mit Ctrl+V ein.
+const MAILTO_LIMIT = 1800;
+function copyText(t){
+  return (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{
+    const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();
+    if(!ok) throw new Error("copy failed");
+  });
+}
+function sendMail(){
+  if(!check())return;
+  const text=buildText().replace(/\n/g,"\r\n");
+  const subj="Zugangsdaten – "+(collect().firma||"");
+  const base="mailto:"+AGENTUR_EMAIL+"?subject="+encodeURIComponent(subj)+"&body=";
+  const full=base+encodeURIComponent(text);
+  const fits=full.length<=MAILTO_LIMIT;
+  const shortBody="Guten Tag\r\n\r\nHier sind unsere Zugangsdaten:\r\n\r\n[ >>> HIER EINFÜGEN: Ctrl+V bzw. Cmd+V <<< ]\r\n\r\nFreundliche Grüsse\r\n"+(collect().person||"");
+  document.getElementById("mailLink").href = fits ? full : base+encodeURIComponent(shortBody);
+  document.getElementById("mailText").value=text;
+  document.getElementById("mailAddr").textContent=AGENTUR_EMAIL;
+  copyText(text).then(()=>setSteps(fits,true),()=>setSteps(fits,false));
+  document.getElementById("mailModal").classList.add("show");
+}
+function setSteps(fits,copied){
+  document.getElementById("mailStatus").innerHTML = copied
+    ? '<span class="ok">✓ Ihre Angaben wurden in die Zwischenablage kopiert.</span>'
+    : 'Bitte kopieren Sie zuerst den Text mit «Text kopieren».';
+  document.getElementById("mailSteps").innerHTML = fits
+    ? '<li>Klicken Sie auf «Mail-Programm öffnen» – alles ist bereits im Mail.</li><li>Mail absenden. Fertig!</li><li style="color:var(--muted)">Öffnet sich nichts? Neues Mail an die Adresse unten schreiben und den Text einfügen (Ctrl+V / Cmd+V).</li>'
+    : '<li>Klicken Sie auf «Mail-Programm öffnen».</li><li>Im Mail an der markierten Stelle einfügen: <b>Ctrl+V</b> (Windows) bzw. <b>Cmd+V</b> (Mac) oder lange drücken → Einfügen (Handy).</li><li>Mail absenden. Fertig!</li><li style="color:var(--muted)">Öffnet sich nichts? Neues Mail an die Adresse unten schreiben und den Text einfügen.</li>';
+}
+function copyModal(){
+  copyText(document.getElementById("mailText").value).then(()=>{toast("Kopiert ✓");setSteps(document.getElementById("mailLink").href.length<=MAILTO_LIMIT && !document.getElementById("mailLink").href.includes("EINF"),true);},()=>{document.getElementById("mailText").select();toast("Bitte markierten Text kopieren");});
+}
+function closeModal(){document.getElementById("mailModal").classList.remove("show");}
+function copyAll(){
+  if(!check())return;
+  const t=buildText();
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("Kopiert ✓"),()=>{
+    const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("Kopiert ✓");
+  });
+}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
+
+load();
+</script>
+</body>
+</html>
