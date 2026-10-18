@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="700" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Social Media">
+  <defs>
+    <linearGradient id="grad-service-social" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7fd6cd" />
+      <stop offset="100%" stop-color="#0F766E" />
+    </linearGradient>
+    <pattern id="grid-service-social" width="64" height="64" patternUnits="userSpaceOnUse">
+           <circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.18)" />
+         </pattern>
+  </defs>
+  <rect width="900" height="700" fill="url(#grad-service-social)" />
+  <rect width="900" height="700" fill="url(#grid-service-social)" />
+  <text x="40" y="644" font-family="Arial, Helvetica, sans-serif" font-size="38.5" font-weight="700" fill="#0b1416">Social Media</text>
+  <text x="40" y="672" font-family="Arial, Helvetica, sans-serif" font-size="19.6" fill="rgba(11,20,22,0.65)">Reichweite &amp; Content</text>
+</svg>

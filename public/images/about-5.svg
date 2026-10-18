@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="1000" viewBox="0 0 900 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KI-Automation">
+  <defs>
+    <linearGradient id="grad-about-5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7fd6cd" />
+      <stop offset="100%" stop-color="#16242a" />
+    </linearGradient>
+    <pattern id="grid-about-5" width="64" height="64" patternUnits="userSpaceOnUse">
+           <circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.18)" />
+         </pattern>
+  </defs>
+  <rect width="900" height="1000" fill="url(#grad-about-5)" />
+  <rect width="900" height="1000" fill="url(#grid-about-5)" />
+  <text x="40" y="944" font-family="Arial, Helvetica, sans-serif" font-size="49.5" font-weight="700" fill="#0b1416">KI-Automation</text>
+  <text x="40" y="972" font-family="Arial, Helvetica, sans-serif" font-size="25.2" fill="rgba(11,20,22,0.65)">Workflows &amp; Tools</text>
+</svg>

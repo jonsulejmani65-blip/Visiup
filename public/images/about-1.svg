@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="1100" viewBox="0 0 900 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Visiup Team">
+  <defs>
+    <linearGradient id="grad-about-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F766E" />
+      <stop offset="100%" stop-color="#0b3b37" />
+    </linearGradient>
+    <pattern id="grid-about-1" width="64" height="64" patternUnits="userSpaceOnUse">
+           <circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.18)" />
+         </pattern>
+  </defs>
+  <rect width="900" height="1100" fill="url(#grad-about-1)" />
+  <rect width="900" height="1100" fill="url(#grid-about-1)" />
+  <text x="40" y="1044" font-family="Arial, Helvetica, sans-serif" font-size="49.5" font-weight="700" fill="#0b1416">Visiup Team</text>
+  <text x="40" y="1072" font-family="Arial, Helvetica, sans-serif" font-size="25.2" fill="rgba(11,20,22,0.65)">Basel, Schweiz</text>
+</svg>
