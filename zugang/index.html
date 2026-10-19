@@ -77,6 +77,13 @@
   .modal .addr{background:var(--teal-bg);border-radius:9px;padding:8px 12px;font-size:14px;margin-bottom:12px}
   .modal a.btn{text-decoration:none;display:inline-block}
   .ok{color:var(--teal);font-weight:600}
+  .invalid{border-color:#dc2626!important;background:#fef2f2!important;box-shadow:0 0 0 3px rgba(220,38,38,.15)!important}
+  .err-msg{color:#dc2626;font-size:13px;font-weight:600;margin-top:5px}
+  .check.invalid-check{background:#fef2f2;border:1px solid #dc2626;border-radius:10px;padding:10px}
+  .err-banner{display:none;background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:600;margin-top:14px}
+  .err-banner.show{display:block}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .shake{animation:shake .3s 2}
   @media (max-width:600px){.grid{grid-template-columns:1fr}header h1{font-size:22px}.card{padding:18px}}
   @media print{.progress,.btn-row,.chips,.toast,.pw button,.remove{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}}
 </style>
@@ -124,6 +131,7 @@
     <h2><span class="icon">✅</span>Abschluss</h2>
     <div style="margin-bottom:14px"><label>Bemerkungen an Visiup</label><textarea data-key="bemerkungen" placeholder="z.B. Wer bei Ihnen die 2-Faktor-Codes erhält, beste Erreichbarkeit …"></textarea></div>
     <label class="check"><input type="checkbox" id="consent" data-key="consent"> Ich bestätige, dass ich berechtigt bin, diese Zugänge weiterzugeben, und Visiup diese ausschliesslich zur Betreuung unserer Online-Präsenz verwenden darf.</label>
+    <div class="err-banner" id="errBanner"></div>
     <div class="btn-row">
       <button class="btn btn-primary" type="button" id="sendBtn" onclick="submitForm()">📨 Jetzt sicher an Visiup senden</button>
       <input type="text" id="website_hp" name="website_hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
@@ -373,10 +381,52 @@ function buildText(){
   L.push("Berechtigung bestätigt: "+(d.consent?"Ja":"Nein"));
   return L.join("\n");
 }
+function clearErr(el){
+  el.classList.remove("invalid");
+  const m=el.parentElement.querySelector(":scope > .err-msg"); if(m) m.remove();
+}
+function markErr(el,msg){
+  el.classList.add("invalid");
+  if(!el.parentElement.querySelector(":scope > .err-msg")){
+    const m=document.createElement("div"); m.className="err-msg"; m.textContent="⚠ "+msg; el.parentElement.appendChild(m);
+  }
+  el.addEventListener("input",()=>{clearErr(el);refreshBanner();},{once:true});
+}
+function refreshBanner(){
+  const n=document.querySelectorAll(".invalid,.invalid-check").length;
+  const b=document.getElementById("errBanner");
+  if(!n){b.classList.remove("show");return;}
+  b.textContent="⚠ Bitte füllen Sie alle Pflichtfelder aus ("+n+" "+(n>1?"fehlen":"fehlt")+"). Die Felder sind rot markiert.";
+  b.classList.add("show");
+}
 function check(){
-  const d=collect();
-  if(!d.firma||!d.person){toast("Bitte Firma und Ansprechperson ausfüllen.");document.getElementById("firma").focus();return false;}
-  if(!d.consent){toast("Bitte die Bestätigung am Schluss ankreuzen.");return false;}
+  document.querySelectorAll(".invalid").forEach(clearErr);
+  const cons=document.getElementById("consent").closest(".check");
+  cons.classList.remove("invalid-check"); const om=cons.parentElement.querySelector(".consent-err"); if(om) om.remove();
+  const fehler=[];
+  [["firma","Bitte Firma angeben"],["person","Bitte Ansprechperson angeben"]].forEach(([id,msg])=>{
+    const el=document.getElementById(id); if(!el.value.trim()){markErr(el,msg);fehler.push(el);}
+  });
+  container.querySelectorAll('[data-key$=".plattform"]').forEach(el=>{
+    const card=el.closest(".card");
+    if(card.querySelector('input[value=login]:checked') && !el.value.trim()){markErr(el,"Bitte Name der Plattform angeben");fehler.push(el);}
+  });
+  if(!document.getElementById("consent").checked){
+    cons.classList.add("invalid-check");
+    const m=document.createElement("div"); m.className="err-msg consent-err"; m.textContent="⚠ Bitte bestätigen Sie die Berechtigung";
+    cons.after(m);
+    document.getElementById("consent").addEventListener("change",()=>{cons.classList.remove("invalid-check");m.remove();refreshBanner();},{once:true});
+    fehler.push(document.getElementById("consent"));
+  }
+  refreshBanner();
+  if(fehler.length){
+    const erst=fehler[0];
+    const ziel=erst.type==="checkbox"?erst.closest(".check"):erst;
+    ziel.scrollIntoView({behavior:"smooth",block:"center"});
+    setTimeout(()=>{ try{erst.focus({preventScroll:true});}catch(e){} ziel.classList.add("shake"); setTimeout(()=>ziel.classList.remove("shake"),700); },450);
+    toast("Bitte Pflichtfelder ausfüllen");
+    return false;
+  }
   return true;
 }
 function downloadFile(){
